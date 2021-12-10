@@ -1,0 +1,8 @@
+{
+  "port": 5000,
+  "jwtSecret": "classnaya laba",
+
+  "AUTH": "http://localhost:5001",
+  "FORUM": "http://localhost:5002",
+  "NEWS": "http://localhost:5003"
+}

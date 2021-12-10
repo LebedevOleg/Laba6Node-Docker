@@ -1,0 +1,43 @@
+.new {
+  width: auto;
+  animation-duration: 3s;
+  animation-name: showON;
+  animation-fill-mode: forwards;
+  background-color: snow;
+  color: teal;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.new::after {
+  content: "НОВОЕ СООБЩЕНИЕ";
+  color: #ff5e00;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  -webkit-animation: blink2 1s linear 6 forwards;
+  animation: blink2 1s linear 6 forwards;
+}
+
+@keyframes showON {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 60;
+  }
+  75% {
+    opacity: 90;
+  }
+  100% {
+    opacity: 100;
+  }
+}
+
+@-webkit-keyframes blink2 {
+  100% {
+    color: rgba(34, 34, 34, 0);
+  }
+}
+@keyframes blink2 {
+  100% {
+    color: rgba(34, 34, 34, 0);
+  }
+}

@@ -1,0 +1,12 @@
+@import "~materialize-css/dist/css/materialize.min.css";
+@import url("https://cdn.syncfusion.com/ej2/material.css");
+html,
+body {
+  height: 90%;
+}
+
+body {
+  font: 12px "Lucida Sans Unicode", "Trebuchet MS", Arial, Helvetica;
+  margin: 0;
+  background: url(pages/bg.png) repeat;
+}
