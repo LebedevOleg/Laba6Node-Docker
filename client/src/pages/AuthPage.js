@@ -17,7 +17,7 @@ export const AuthPage = () => {
     const message = "";
     try {
       const authCheck = await axios
-        .post("/api/login", { ...form })
+        .post("/api/auth/login", { ...form })
         .catch((error) => {
           if (error.response) {
             if (window.M) {

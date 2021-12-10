@@ -31,7 +31,7 @@ router.post(
 
 router.post("/login", async (req, res) => {
   try {
-    console.log("login", req.body);
+    console.log("login", req);
 
     await axios
       .post(config.get("AUTH") + "/api/auth/login", req.body)
