@@ -46,6 +46,7 @@ const BlockMessItem = (post) => {
         }
       )
       .then((res) => {
+        console.log(res.data.message);
         if (res.data.message) {
           setLike(true);
         } else {

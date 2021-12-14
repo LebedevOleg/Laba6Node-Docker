@@ -101,6 +101,9 @@ export const ForumPage = () => {
           <ul id="nav-mobile" className="right hide-on-med-and-down ">
             <li> Пользователь: {auth.userLogin}</li>
             <li>
+              <a href="/news/">Новости</a>
+            </li>
+            <li>
               <a href="/forum/">Форум</a>{" "}
             </li>
             <li>

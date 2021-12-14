@@ -3,6 +3,9 @@ const Router = require("express");
 const router = new Router();
 const config = require("config");
 const { default: axios } = require("axios");
+const NodeCache = require("node-cache");
+
+const cache = new NodeCache({ stdTTL: 10 });
 
 //* /api/forum/sendPost
 router.post("/sendPost", async (req, res) => {
@@ -18,21 +21,31 @@ router.post("/sendPost", async (req, res) => {
 });
 //* /api/forum/getPost
 router.get("/getPost", async (req, res) => {
-  try {
-    await axios
-      .get(config.get("FORUM") + "/api/forum/getPost", {
-        headers: { authorization: req.headers.authorization },
-      })
-      .then((result) => {
-        res.status(201).json(result.data);
-      });
-  } catch (e) {
-    res.json({ message: e.message });
+  if (cache.has("posts")) {
+    return res.json(cache.get("posts"));
+  } else {
+    try {
+      await axios
+        .get(config.get("FORUM") + "/api/forum/getPost", {
+          headers: { authorization: req.headers.authorization },
+        })
+        .then((result) => {
+          cache.set("posts", result.data);
+          res.status(201).json(result.data);
+        });
+    } catch (e) {
+      res.json({ message: e.message });
+    }
   }
 });
 
 router.post("/deletePost", async (req, res) => {
   try {
+    await axios
+      .post(config.get("FORUM") + "/api/forum/deletePost", req.body)
+      .then((result) => {
+        res.json(result.data);
+      });
     /* const { postId } = req.body;
     const deleted = await db.query("DELETE FROM post WHERE id = $1", [postId]);
     res.json({ message: "Пост удален" }); */
@@ -43,6 +56,11 @@ router.post("/deletePost", async (req, res) => {
 
 router.post("/updatePost", async (req, res) => {
   try {
+    await axios
+      .post(config.get("FORUM") + "/api/forum/updatePost", req.body)
+      .then((result) => {
+        res.json(result.data);
+      });
     /*  const { postId, text } = req.body;
     const update = await db.query("UPDATE post SET text=$1 WHERE id = $2", [
       text,
@@ -56,6 +74,11 @@ router.post("/updatePost", async (req, res) => {
 
 router.get("/getAllUsers", async (req, res) => {
   try {
+    await axios
+      .get(config.get("FORUM") + "/api/forum/getAllUsers")
+      .then((result) => {
+        res.status(201).json(result.data);
+      });
     /* const users = await db.query("SELECT id, login, is_block FROM users");
 
     if (users.rowCount == 0) {
@@ -70,6 +93,11 @@ router.get("/getAllUsers", async (req, res) => {
 
 router.post("/blockUser", async (req, res) => {
   try {
+    await axios
+      .post(config.get("FORUM") + "/api/forum/blockUser", req.body)
+      .then((result) => {
+        res.json(result.data);
+      });
     /*    const { userID, blocked } = req.body;
     await db.query("UPDATE users SET is_block=$1 WHERE id = $2", [
       blocked,
@@ -83,6 +111,11 @@ router.post("/blockUser", async (req, res) => {
 
 router.post("/likes", async (req, res) => {
   try {
+    await axios
+      .post(config.get("FORUM") + "/api/forum/likes", req.body)
+      .then((result) => {
+        res.json(result.data);
+      });
     /*  const { postId } = req.body;
     const likes = await db.query("select id from likes where post_id = $1", [
       postId,
@@ -97,6 +130,17 @@ router.post(
   "/Userlike",
   /* auth, */ async (req, res) => {
     try {
+      await axios
+        .post(
+          config.get("FORUM") + "/api/forum/Userlike",
+          {
+            headers: { authorization: req.headers.authorization },
+          },
+          req.body
+        )
+        .then((result) => {
+          res.status(201).json(result.data);
+        });
       /*  const { postId } = req.body;
       const likes = await db.query(
         "select id from likes where user_id = $1 and post_id = $2",
@@ -112,6 +156,7 @@ router.post(
 
 router.post("/chngeLike", async (req, res) => {
   try {
+    await axios.post(config.get("FORUM") + "/api/forum/chngeLike", req.body);
     /* const { postId, userID } = req.body;
     const likes = await db.query(
       "select id from likes where user_id = $1 and post_id = $2",
@@ -181,6 +226,11 @@ router.get(
 // */api/forum/importDataDate
 router.post("/importDataDate", async (req, res) => {
   try {
+    await axios
+      .post(config.get("FORUM") + "/api/forum/importDataDate", req.body)
+      .then((result) => {
+        res.json(result.data);
+      });
     /*  const { StartDate, EndDate } = req.body;
 
     const messagesDB = await db.query(
@@ -195,6 +245,11 @@ router.post("/importDataDate", async (req, res) => {
 
 router.post("/importDataCount", async (req, res) => {
   try {
+    await axios
+      .post(config.get("FORUM") + "/api/forum/importDataCount", req.body)
+      .then((result) => {
+        res.json(result.data);
+      });
     /* const { Count, side } = req.body;
     if (side === "desc") {
       const messagesDB = await db.query(

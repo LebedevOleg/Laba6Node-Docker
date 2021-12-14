@@ -4,6 +4,7 @@ import { AuthPage } from "./pages/AuthPage";
 import { ForumPage } from "./pages/ForumPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { Import } from "./pages/ImportPage";
+import NewsPage from "./pages/NewsPage";
 
 export const useRoutes = (isAuth) => {
   if (isAuth) {
@@ -14,6 +15,9 @@ export const useRoutes = (isAuth) => {
         </Route>
         <Route path="/import/" exact>
           <Import />
+        </Route>
+        <Route path="/news/" exact>
+          <NewsPage />
         </Route>
         <Redirect to="/forum/" />
       </Switch>
