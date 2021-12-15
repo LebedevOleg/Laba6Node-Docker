@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import Modal from "./modal/ChangeMessage.modal";
 import DOMPurify from "dompurify";
 import stl from "./BlockMessItem.module.css";
@@ -7,6 +7,8 @@ import { AuthContext } from "../context/authContext";
 
 const BlockMessItem = (post) => {
   const auth = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
+  console.debug(token);
   const [numLikes, setNumLikes] = useState();
   const [like, setLike] = useState();
   const date = post.post.date.split("T")[0];
@@ -22,26 +24,27 @@ const BlockMessItem = (post) => {
       });
   };
 
-  const GetLikesHandler = async () => {
+  const GetLikesHandler = useCallback(async () => {
     try {
       await axios
         .post("/api/forum/likes", { postId: post.post.id })
         .then((res) => {
           setNumLikes(res.data.message);
         });
+      GetUsetLike();
     } catch (e) {
       console.error(e.message);
     }
-  };
+  }, []);
 
-  const GetUsetLike = async () => {
+  const GetUsetLike = useCallback(async () => {
     await axios
       .post(
         "/api/forum/Userlike",
         { postId: post.post.id, userID: auth.userId },
         {
           headers: {
-            Authorization: `Bearer ${auth.token}`,
+            authorization: `Bearer ${token}`,
           },
         }
       )
@@ -53,7 +56,7 @@ const BlockMessItem = (post) => {
           setLike(false);
         }
       });
-  };
+  }, []);
 
   const ChangeLike = async () => {
     await axios.post("/api/forum/chngeLike", {
@@ -64,7 +67,7 @@ const BlockMessItem = (post) => {
   useEffect(() => {
     GetLikesHandler();
     GetUsetLike();
-    var run = setInterval(() => GetLikesHandler(), 5000);
+    var run = setInterval(() => GetLikesHandler(), 7000);
   }, [GetLikesHandler, GetUsetLike]);
 
   return (

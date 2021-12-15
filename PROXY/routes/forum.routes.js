@@ -5,7 +5,7 @@ const config = require("config");
 const { default: axios } = require("axios");
 const NodeCache = require("node-cache");
 
-const cache = new NodeCache({ stdTTL: 10 });
+const cache = new NodeCache({ stdTTL: 11, checkperiod: 13 });
 
 //* /api/forum/sendPost
 router.post("/sendPost", async (req, res) => {
@@ -22,6 +22,7 @@ router.post("/sendPost", async (req, res) => {
 //* /api/forum/getPost
 router.get("/getPost", async (req, res) => {
   if (cache.has("posts")) {
+    console.log("cache");
     return res.json(cache.get("posts"));
   } else {
     try {
@@ -31,7 +32,8 @@ router.get("/getPost", async (req, res) => {
         })
         .then((result) => {
           cache.set("posts", result.data);
-          res.status(201).json(result.data);
+          console.log("api");
+          return res.status(201).json(result.data);
         });
     } catch (e) {
       res.json({ message: e.message });
@@ -131,14 +133,11 @@ router.post(
   /* auth, */ async (req, res) => {
     try {
       await axios
-        .post(
-          config.get("FORUM") + "/api/forum/Userlike",
-          {
-            headers: { authorization: req.headers.authorization },
-          },
-          req.body
-        )
+        .post(config.get("FORUM") + "/api/forum/Userlike", req.body, {
+          headers: { authorization: req.headers.authorization },
+        })
         .then((result) => {
+          // console.log(result.data);
           res.status(201).json(result.data);
         });
       /*  const { postId } = req.body;
@@ -150,7 +149,9 @@ router.post(
         return res.json({ message: false });
       }
       res.json({ message: true }); */
-    } catch (e) {}
+    } catch (e) {
+      console.log(e.message + " UserLike");
+    }
   }
 );
 
@@ -173,7 +174,7 @@ router.post("/chngeLike", async (req, res) => {
         postId,
       ]); */
   } catch (e) {
-    console.log(e.message);
+    console.log(e.message + " chngeLike");
   }
 });
 //* /api/forum/setLastPost
@@ -181,8 +182,8 @@ router.post(
   "/setLastPost",
   /* auth, */ async (req, res) => {
     try {
-      await auth
-        .post(config.get("FORUM") + "/api/forum/setLastPost", {
+      await axios
+        .post(config.get("FORUM") + "/api/forum/setLastPost", req.body, {
           headers: { authorization: req.headers.authorization },
         })
         .then((result) => {
@@ -218,7 +219,7 @@ router.get(
 
       res.json({ lastId: last.rows[0].last_post_id }); */
     } catch (e) {
-      console.log(e.message);
+      console.log(e.message + " getLastPost");
     }
   }
 );
@@ -239,7 +240,7 @@ router.post("/importDataDate", async (req, res) => {
     );
     res.json(messagesDB); */
   } catch (e) {
-    console.log(e.message);
+    console.log(e.message + " importDataDate");
   }
 });
 

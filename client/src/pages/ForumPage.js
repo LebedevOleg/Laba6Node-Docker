@@ -16,6 +16,7 @@ import BlockUser from "../ForumItem/modal/BlockUser.modal";
 export const ForumPage = () => {
   const history = useHistory();
   const auth = useContext(AuthContext);
+  const { userId, token } = useContext(AuthContext);
   const sendMessage = SendMessTodo();
   const [posts, setPosts] = useState([]);
   const [lastID, setlastID] = useState();
@@ -29,14 +30,16 @@ export const ForumPage = () => {
           await axios
             .post(
               "/api/forum/setLastPost",
-              { postId: res.data[0].id, userID: auth.userId },
+              { postId: res.data[0].id, userID: userId },
               {
                 headers: {
-                  Authorization: `Bearer ${auth.token}`,
+                  Authorization: `Bearer ${token}`,
                 },
               }
             )
-            .then((response) => {});
+            .then((response) => {
+              console.log(response);
+            });
           setPosts(res.data);
         });
     } catch (e) {
@@ -53,10 +56,8 @@ export const ForumPage = () => {
         setlastID(res.data.lastId);
       });
   }, []);
-
   const setLastPost = useCallback(async () => {
     try {
-      console.debug("start");
       await axios
         .post(
           "/api/forum/setLastPost",
@@ -76,7 +77,6 @@ export const ForumPage = () => {
   useEffect(() => {
     getPosts();
     getLastPost();
-
     var run = setInterval(() => getPosts(), 5000);
     var run1 = setInterval(() => getLastPost(), 5000);
   }, [getPosts, getLastPost]);

@@ -28,9 +28,11 @@ router.get("/getPost", auth, async (req, res) => {
     if (posts.rowCount == 0) {
       return res.json({ message: "Здесь еще нет постов" });
     }
+    console.log("posts");
 
     res.json(posts.rows);
   } catch (e) {
+    console.log(e);
     res.json({ message: e.message });
   }
 });
@@ -108,7 +110,9 @@ router.post("/Userlike", auth, async (req, res) => {
       return res.json({ message: false });
     }
     res.json({ message: true });
-  } catch (e) {}
+  } catch (e) {
+    console.log(e.message);
+  }
 });
 
 router.post("/chngeLike", async (req, res) => {
@@ -136,12 +140,13 @@ router.post("/chngeLike", async (req, res) => {
 
 router.post("/setLastPost", auth, async (req, res) => {
   try {
+    console.log("here");
     const { postId, userID } = req.body;
     const lastPostID = await db.query(
       "UPDATE users SET  last_post_id=$1 WHERE id = $2 ",
       [postId, userID]
     );
-    res.json(lastPostID.rows);
+    res.json("обновил");
   } catch (e) {
     res.json(e.message);
   }

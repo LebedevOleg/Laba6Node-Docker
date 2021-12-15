@@ -16,6 +16,7 @@ module.exports = (req, res, next) => {
     req.userAuth = decoded;
     next();
   } catch (e) {
+    console.log(e.message);
     res.status(401).json({ message: "Вы не авторизированны" });
   }
 };
