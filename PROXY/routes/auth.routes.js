@@ -31,14 +31,16 @@ router.post(
 
 router.post("/login", async (req, res) => {
   try {
-    console.log("login", req);
+    console.log(config.get("AUTH") + "/api/auth/login");
 
     await axios
       .post(config.get("AUTH") + "/api/auth/login", req.body)
       .then((result) => {
+        console.log("here");
         res.status(201).json(result.data);
       });
   } catch (e) {
+    console.log(e);
     return res.status(400).json({ message: e.message });
   }
 });

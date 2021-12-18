@@ -1,9 +1,8 @@
 {
-    "port": 5000,
-    "jwtSecret": "classnaya laba",
-  
-    "AUTH": "http://localhost:5001",
-    "FORUM": "http://localhost:5002",
-    "NEWS": "http://localhost:5003"
-  }
-  
+  "port": 5000,
+  "jwtSecret": "classnaya laba",
+
+  "AUTH": "http://172.18.0.3:5001",
+  "FORUM": "http://172.18.0.4:5002",
+  "NEWS": "http://172.18.0.5:5003"
+}

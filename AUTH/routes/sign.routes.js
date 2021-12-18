@@ -86,6 +86,7 @@ router.post("/login", async (req, res) => {
       IsBlock: user.rows[0].is_block,
     });
   } catch (e) {
+    console.log(e);
     return res.status(400).json({ message: "Ошибка" });
   }
 });
